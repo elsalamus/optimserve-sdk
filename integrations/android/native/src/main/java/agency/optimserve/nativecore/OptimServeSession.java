@@ -40,7 +40,7 @@ public final class OptimServeSession implements AutoCloseable {
     private int sequence,peers,settingsVersion,rebuffers,errors;
     private long http,peer,upload,play,buffer,lastTick,checked,expires,renewAt,buffered;
     private volatile boolean closed;
-    private boolean started,busy,reporting;
+    private boolean started,busy,reporting,background;
     private CompletableFuture<JSONObject> preparing;
     private volatile Call issuance;
     public OptimServeSession(Context context,String appKey,String appName,String appIdentifier){
@@ -103,6 +103,7 @@ public final class OptimServeSession implements AutoCloseable {
     }catch(Exception error){return false;}}
     public void prepareJSON(String url,String streamId,ResultListener callback){prepare(url,streamId).whenComplete((value,error)->callback.complete(value==null?null:value.toString(),error==null?null:"Playback setup cancelled."));}
     private String startEngine(final int run)throws Exception{
+        if(background&&grant.getJSONObject("settings").optBoolean("hide_background_p2p")){fallback("background_paused");return stream;}
         JSONObject settings=grant.getJSONObject("settings");ArrayList<g> ice=new ArrayList<>();ice.add(new g("stun:stun.l.google.com:19302"));ice.add(new g("stun:global.stun.twilio.com:3478"));
         P2pConfig config=new P2pConfig.Builder().announce(grant.getString("announce")).signalConfig(grant.getJSONObject("signalConfig").getString("main"),null).p2pProtocolVersion(P2pProtocolVersion.V8).iceServers(ice).geoIpPreflight(false).ICEPreflight(false).useHttpRange(settings.getBoolean("use_http_range")).prefetchOnly(settings.getBoolean("prefetch_only")).diskCacheLimit(0).memoryCacheCountLimit(10).logEnabled(false).build();
         if(engine==null)engine=P2pEngine.init(context,grant.getString("token"),config);else{engine.setP2pConfig(config);M3u8Proxy.Companion.getInstance().startLocalServer();}
@@ -118,7 +119,7 @@ public final class OptimServeSession implements AutoCloseable {
     }
     private void countTime(){long now=SystemClock.elapsedRealtime(),delta=Math.max(0,Math.min(2000,now-lastTick));lastTick=now;if(state.equals("playing")){play+=delta;started=true;}if(state.equals("buffering"))buffer+=delta;}
     public void updatePlayback(String value,double bufferedMs,double positionMs){mainThread();if(!Arrays.asList("playing","paused","buffering","stopped").contains(value))throw new IllegalArgumentException("Invalid playback state.");countTime();if(value.equals("buffering")&&!state.equals(value)&&started)rebuffers=Math.min(100000,rebuffers+1);state=value;buffered=Double.isFinite(bufferedMs)?(long)Math.max(0,bufferedMs):0;}
-    public void setBackground(boolean background){mainThread();if(background&&grant.optJSONObject("settings")!=null&&grant.optJSONObject("settings").optBoolean("hide_background_p2p"))fallback("background_paused");}
+    public void setBackground(boolean background){mainThread();this.background=background;if(background&&grant.optJSONObject("settings")!=null&&grant.optJSONObject("settings").optBoolean("hide_background_p2p"))fallback("background_paused");}
     public JSONObject snapshot(){mainThread();try{return new JSONObject().put("http_kib",mode.equals("p2p")||http>0?http:JSONObject.NULL).put("peer_kib",peer).put("upload_kib",upload).put("play_ms",play).put("buffer_ms",buffer).put("peers",peers).put("mode",mode).put("reason",reason).put("reporting",reporting);}catch(JSONException impossible){throw new IllegalStateException(impossible);}}
     private JSONObject playback(String url){try{return new JSONObject().put("url",url).put("mode",mode).put("reason",reason);}catch(JSONException impossible){throw new IllegalStateException(impossible);}}
     private JSONObject report(boolean stopped){try{return new JSONObject().put("sequence",++sequence).put("http_kib",http).put("peer_kib",peer).put("upload_kib",upload).put("play_ms",play).put("buffer_ms",buffer).put("rebuffers",rebuffers).put("errors",errors).put("started",started).put("state",stopped?"stopped":state).put("runtime",new JSONObject().put("sdk","3.14.0").put("adapter","native").put("adapter_version",VERSION).put("player","player"));}catch(JSONException impossible){throw new IllegalStateException(impossible);}}

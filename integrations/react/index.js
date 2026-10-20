@@ -3,6 +3,7 @@ export function useOptimServe(hls, {site, key, stream, streamId, onStatus, onErr
   const callbacks = useRef({onStatus,onError}); callbacks.current = {onStatus,onError};
   const [stats,setStats] = useState(null);
   useEffect(() => {
+    setStats(null);
     if (!hls) return;
     let disposed = false, delivery, timer, unbind;
     (async () => {
@@ -17,7 +18,7 @@ export function useOptimServe(hls, {site, key, stream, streamId, onStatus, onErr
         timer = setInterval(() => setStats(delivery.snapshot()),1000);
       } catch (error) {if (!disposed) callbacks.current.onError?.(error);}
     })();
-    return () => {disposed = true; clearInterval(timer); unbind?.(); void delivery?.destroy();};
+    return () => {disposed = true; clearInterval(timer); try {unbind?.();} finally {void delivery?.destroy();}};
   },[hls,site,key,stream,streamId]);
   return stats;
 }

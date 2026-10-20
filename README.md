@@ -8,10 +8,10 @@ transport; no commercial Apple transport binaries are distributed here.
 | Swift / Objective-C: iOS, tvOS, macOS | [Apple](integrations/apple) | Cloud compilation workflow; device playback pending |
 | React Native | [React Native](integrations/react-native) | Android bridge compiled; Apple/device checks pending |
 | Flutter | [Flutter](integrations/flutter) | Analysis, lifecycle tests and Android host build passed; Apple/device checks pending |
-| React web | [React](integrations/react) | Hook source; real React lifecycle playback pending |
-| Electron: Windows, Linux, macOS | [Electron](integrations/electron) | Access-boundary and simulated-player checks passed; real playback pending |
+| React web | [React](integrations/react) | React 18 StrictMode and real peer playback checked in Chromium |
+| Electron: Windows, Linux, macOS | [Electron](integrations/electron) | Windows preload/IPC/HTTPS fixture checks passed; peer media and Linux pending |
 | UniApp / UniApp X | [UniApp](integrations/uniapp) | Native/UTS source; HBuilderX builds pending |
-| Android player-independent core | [Android native](integrations/android/native) | Release compilation passed; device playback pending |
+| Android player-independent core | [Android native](integrations/android/native) | Release compilation and Android background-policy instrumentation passed; peer media pending |
 
 These are previews, not a claim that every device/player combination is supported.
 Android framework bridges depend on `agency.optimserve:optimserve-native:0.1.0`.
