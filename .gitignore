@@ -1,0 +1,10 @@
+**/Vendor/
+**/.build/
+**/.swiftpm/
+**/build/
+**/node_modules/
+**/.gradle/
+**/.dart_tool/
+**/.env
+**/*.key
+**/*.pem
