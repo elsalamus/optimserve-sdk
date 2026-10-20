@@ -1,0 +1,1 @@
+{"name":"@optimserve/react","version":"0.1.0","type":"module","license":"MIT","main":"index.js","files":["index.js","README.md","LICENSE"],"peerDependencies":{"react":">=18"}}

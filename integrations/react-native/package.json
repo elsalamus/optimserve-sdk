@@ -1,0 +1,10 @@
+{
+  "name": "@optimserve/react-native",
+  "version": "0.1.0",
+  "description": "OptimServe peer URLs, policies and usage for React Native players",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "files": ["index.js", "index.d.ts", "lib", "android", "ios", "OptimServeReactNative.podspec", "react-native.config.cjs", "README.md", "LICENSE"],
+  "peerDependencies": {"react-native": ">=0.76", "react": ">=18"}
+}

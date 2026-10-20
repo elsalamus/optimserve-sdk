@@ -1,0 +1,11 @@
+apply plugin: 'com.android.library'
+android {
+    namespace 'agency.optimserve.reactnative'
+    compileSdk 34
+    defaultConfig { minSdk 24 }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
+}
+dependencies {
+    implementation 'com.facebook.react:react-android'
+    implementation 'agency.optimserve:optimserve-native:0.1.0'
+}

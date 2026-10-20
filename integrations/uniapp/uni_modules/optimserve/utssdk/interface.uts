@@ -1,0 +1,2 @@
+export type ConfigOptions = { appKey:string; appName:string; appId:string; onEvent:((event:UTSJSONObject)=>void)|null }
+export type Completion = (result:UTSJSONObject)=>void

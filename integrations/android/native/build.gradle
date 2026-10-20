@@ -1,0 +1,26 @@
+plugins { id 'com.android.library'; id 'maven-publish' }
+android {
+    namespace 'agency.optimserve.nativecore'
+    compileSdk 34
+    defaultConfig { minSdk 24; consumerProguardFiles 'consumer-rules.pro' }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
+    publishing { singleVariant('release') { withSourcesJar() } }
+}
+dependencies {
+    implementation 'com.swarmcloud:p2p_engine:3.14.0'
+    implementation 'com.swarmcloud:datachannel_native:1.0.232'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.orhanobut:logger:2.2.0'
+}
+afterEvaluate {
+    publishing {
+        publications { release(MavenPublication) {
+            from components.release
+            groupId = 'agency.optimserve'; artifactId = 'optimserve-native'; version = '0.1.0'
+            pom { name = 'OptimServe Native Session SDK'; description = 'Authorized peer URLs, policy checks and measured usage for native players.' }
+        } }
+        repositories { maven { url = layout.buildDirectory.dir('repository') } }
+    }
+}

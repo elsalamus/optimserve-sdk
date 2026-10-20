@@ -1,0 +1,22 @@
+name: optimserve
+description: OptimServe authorized peer URLs and measured usage for native video players.
+version: 0.1.0
+homepage: https://p2p.optimserve.agency
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.7.0'
+dependencies:
+  flutter:
+    sdk: flutter
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: agency.optimserve.flutter
+        pluginClass: OptimServePlugin
+      ios:
+        pluginClass: OptimServePlugin
+        sharedDarwinSource: true
+      macos:
+        pluginClass: OptimServePlugin
+        sharedDarwinSource: true

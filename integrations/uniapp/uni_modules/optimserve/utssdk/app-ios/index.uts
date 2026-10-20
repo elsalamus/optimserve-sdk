@@ -1,0 +1,16 @@
+import {OptimServeSession} from 'OptimServe'
+import {DispatchQueue} from 'Dispatch'
+import {ConfigOptions,Completion} from '../interface.uts'
+let session:OptimServeSession|null = null
+function ui(@escaping work:()=>void):void {DispatchQueue.main.async(execute=work)}
+export function configure(options:ConfigOptions,done:Completion):void {
+  ui(()=>{try {session?.close();session=UTSiOS.try(new OptimServeSession(appKey=options.appKey,appName=options.appName,appIdentifier=options.appId));session!.onJSONEvent=(json:string):void=>{options.onEvent?.(JSON.parseObject(json)!)};done({ok:true})}catch(e){done({error:'Check your App Key and App ID.'})}})
+}
+export function prepare(stream:string,streamId:string|null,done:Completion):void {
+  ui(()=>{if(session==null){done({error:'Create the OptimServe session first.'});return}session!.prepareJSON(stream,streamID=streamId,completion=(json:string|null,error:string|null):void=>{done(error!=null?{error:error}:JSON.parseObject(json!)!)})})
+}
+export function updatePlayback(state:string,bufferedMs:number,positionMs:number):void {ui(()=>{session?.updatePlayback(state,bufferedMs=bufferedMs,positionMs=positionMs)})}
+export function setBackground(value:boolean):void {ui(()=>{session?.setBackground(value)})}
+export function snapshot(done:Completion):void {ui(()=>{done(session==null?{error:'No active session'}:JSON.parseObject(session!.snapshotJSON())!)})}
+export function stop():void {ui(()=>{session?.stop()})}
+export function close():void {ui(()=>{session?.close();session=null})}

@@ -1,0 +1,1 @@
+{"name":"@optimserve/electron","version":"0.1.0","type":"module","license":"MIT","main":"main.js","exports":{".":"./main.js","./renderer":"./renderer.js","./preload":"./preload.cjs"},"files":["main.js","policy.js","renderer.js","preload.cjs","README.md","LICENSE"],"peerDependencies":{"electron":">=30"}}

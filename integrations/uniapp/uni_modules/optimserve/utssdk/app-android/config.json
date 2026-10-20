@@ -1,0 +1,1 @@
+{"minSdkVersion":24,"dependencies":["agency.optimserve:optimserve-native:0.1.0"],"project":{"repositories":["maven { url 'https://p2p.optimserve.agency/sdk/maven/' }"]}}
