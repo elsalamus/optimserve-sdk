@@ -29,7 +29,7 @@ class OptimServeSession with WidgetsBindingObserver {
       WidgetsBinding.instance.addObserver(session);
       session.didChangeAppLifecycleState(WidgetsBinding.instance.lifecycleState ?? AppLifecycleState.inactive);
       return session;
-    } catch (_) { _owned = false; try { await _methods.invokeMethod<void>('close'); } catch (_) {} rethrow; }
+    } catch (_) { try { await _methods.invokeMethod<void>('close'); } catch (_) {} finally { _owned = false; } rethrow; }
   }
   static Map<String, dynamic> _map(dynamic raw) => Map<String, dynamic>.from(raw is String ? jsonDecode(raw) as Map : raw as Map);
   Future<dynamic> _call(String name, [Map<String, dynamic>? args]) {
@@ -53,7 +53,6 @@ class OptimServeSession with WidgetsBindingObserver {
   Future<void> close() async {
     if (_closed) return;
     _closed = true; WidgetsBinding.instance.removeObserver(this);
-    await _subscription?.cancel();
-    try { await _methods.invokeMethod<void>('close'); } finally { _owned = false; }
+    try { try { await _subscription?.cancel(); } finally { await _methods.invokeMethod<void>('close'); } } finally { _owned = false; }
   }
 }

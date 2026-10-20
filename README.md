@@ -7,7 +7,7 @@ transport; no commercial Apple transport binaries are distributed here.
 | --- | --- | --- |
 | Swift / Objective-C: iOS, tvOS, macOS | [Apple](integrations/apple) | Cloud compilation workflow; device playback pending |
 | React Native | [React Native](integrations/react-native) | Android bridge compiled; Apple/device checks pending |
-| Flutter | [Flutter](integrations/flutter) | Analysis and Android host build passed; Apple/device checks pending |
+| Flutter | [Flutter](integrations/flutter) | Analysis, lifecycle tests and Android host build passed; Apple/device checks pending |
 | React web | [React](integrations/react) | Hook source; real React lifecycle playback pending |
 | Electron: Windows, Linux, macOS | [Electron](integrations/electron) | Access-boundary and simulated-player checks passed; real playback pending |
 | UniApp / UniApp X | [UniApp](integrations/uniapp) | Native/UTS source; HBuilderX builds pending |

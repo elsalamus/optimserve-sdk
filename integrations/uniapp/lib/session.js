@@ -19,7 +19,7 @@ export async function openSession(adapter, {appKey, appName, appId, onEvent = ()
         onEvent(event.type === 'url' ? {...(event.playback || event), type:'url'} : event);
       } catch { /* Customer callbacks cannot interrupt policy checks or accounting. */ }
     });
-  } catch (error) {owners.delete(adapter); try {await adapter.call('close');} catch {} throw error;}
+  } catch (error) {try {await adapter.call('close');} catch {} finally {owners.delete(adapter);} throw error;}
   return Object.freeze({
     async prepare(stream, streamId) {
       const url = new URL(stream);
@@ -32,6 +32,6 @@ export async function openSession(adapter, {appKey, appName, appId, onEvent = ()
     },
     setBackground(value) {if (typeof value !== 'boolean') throw new TypeError('Provide a background boolean.'); return call('setBackground', value);},
     snapshot: () => call('snapshot'), stop: () => call('stop'),
-    async close() {if (closed) return; closed = true; unsubscribe(); try {await adapter.call('close');} finally {owners.delete(adapter);}}
+    async close() {if (closed) return; closed = true; try {try {unsubscribe();} finally {await adapter.call('close');}} finally {owners.delete(adapter);}}
   });
 }
